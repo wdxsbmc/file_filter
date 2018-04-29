@@ -55,8 +55,32 @@ if __name__ == "__main__":
 import win32api
 from win32api import GetFileVersionInfo, LOWORD, HIWORD
 
+import pefile
+import requests
+import moviepy
+from moviepy.editor import VideoFileClip
+
+def get_vedio_info(path):
+    clip = VideoFileClip(path)
+    print( clip.duration ) # seconds
+
+
+def LOWORD(dword):
+    return dword & 0x0000ffff
+def HIWORD(dword): 
+    return dword >> 16
+def get_product_version(path):
+
+    pe = pefile.PE(path)
+    print(PE.dump_info())
+
+    ms = pe.VS_FIXEDFILEINFO.ProductVersionMS
+    ls = pe.VS_FIXEDFILEINFO.ProductVersionLS
+    return (HIWORD (ms), LOWORD (ms), HIWORD (ls), LOWORD (ls))
 
 def get_version_number (filename):
+  nSize = win32api.GetfileVersionSize(filename,0)
+  print('nSize=', nSize)
   info = win32api.GetFileVersionInfo(filename,"\\")
   ms = info['FileVersionMS']
   ls = info['FileVersionLS']
@@ -67,9 +91,11 @@ if __name__ == '__main__':
 #  import os
 #  filename = os.environ["COMSPEC"]
 #  print ".".join ([str (i) for i in get_version_number ("./aa.txt")])    
-   print(get_version_number ("./aa.txt"))
+  # print(get_product_version ("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.txt"))
+   print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
+   #print(get_version_number ("./aa.txt"))
 
-
+#
 '''
 import os,filever
 
