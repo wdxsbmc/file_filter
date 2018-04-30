@@ -60,17 +60,25 @@ import requests
 import moviepy
 from moviepy.editor import VideoFileClip
 
+import subprocess
+
+def getLength(filename):
+  result = subprocess.Popen(["ffprobe", filename],
+    stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+  #print(FFprobe(filename).Video)
+  return [x for x in result.stdout.readlines()]
+
 def get_vedio_info(path):
     clip = VideoFileClip(path)
-    print( clip.duration ) # seconds
+    print( clip.duration ) # second
 
-
+'''
 def LOWORD(dword):
     return dword & 0x0000ffff
 def HIWORD(dword): 
     return dword >> 16
 def get_product_version(path):
-
+#just for exe|sys|dll  win32 file
     pe = pefile.PE(path)
     print(PE.dump_info())
 
@@ -85,17 +93,26 @@ def get_version_number (filename):
   ms = info['FileVersionMS']
   ls = info['FileVersionLS']
   return HIWORD (ms), LOWORD (ms), HIWORD (ls), LOWORD (ls)
-
+'''
 
 if __name__ == '__main__':
 #  import os
 #  filename = os.environ["COMSPEC"]
 #  print ".".join ([str (i) for i in get_version_number ("./aa.txt")])    
   # print(get_product_version ("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.txt"))
-   print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
+   print(getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts"))
+   #print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
    #print(get_version_number ("./aa.txt"))
+#    mts_info = getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts")
+#    propNames = ('Video', 'InternalName', 'ProductName',
+#         'CompanyName', 'LegalCopyright', 'ProductVersion',
+#         'FileDescription', 'LegalTrademarks', 'PrivateBuild',
+#         'FileVersion', 'OriginalFilename', 'SpecialBuild')
+ 
+#    props = {'Video': None, 'StringFileInfo': None, 'FileVersion': None}
+#    props['Video'] = mts_info[]
 
-#
+
 '''
 import os,filever
 
