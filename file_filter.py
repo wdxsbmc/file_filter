@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+import win_unicode_console
+win_unicode_console.enable()
 '''
 import win32api
 from win32api import GetFileVersionInfo, LOWORD, HIWORD
@@ -52,8 +54,8 @@ if __name__ == "__main__":
     print('stop<<<')
 '''
 
-import win32api
-from win32api import GetFileVersionInfo, LOWORD, HIWORD
+#import win32api
+#from win32api import GetFileVersionInfo, LOWORD, HIWORD
 
 import pefile
 import requests
@@ -63,8 +65,9 @@ from moviepy.editor import VideoFileClip
 import subprocess
 import re
 
+import os
 
-def getLength(filename):
+def get_mts_info(filename):
     result = subprocess.Popen(["ffprobe", filename],
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     # print(FFprobe(filename).Video)
@@ -82,8 +85,16 @@ def getLength(filename):
     result_list = result.stdout.readlines()
     for x in result_list:
         #x.decode('UTF-8')
-        if(x.find(b'Video: h264') > 0 ):
-            return x
+        if(x.find(b'Video: h264'and b'29.97 fps') > 0 ):
+            #print(x)
+            return 1
+    return 0
+
+
+def del_mts_file(path):
+    if os.path.exists(path):
+        #删除文件，可使用以下两种方法。
+        os.remove(path)
 
 def get_vedio_info(path):
     clip = VideoFileClip(path)
@@ -118,10 +129,11 @@ if __name__ == '__main__':
     #  filename = os.environ["COMSPEC"]
     #  print ".".join ([str (i) for i in get_version_number ("./aa.txt")])
     # print(get_product_version ("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.txt"))
-    print(getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts"))
+   # print(get_mts_info("D:/workspace_bi/python/file_filter/001955.mts"))
+    #print(get_mts_info("D:/workspace_bi/python/file_filter/014512.mts"))
     # print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
     #print(get_version_number ("./aa.txt"))
-#    mts_info = getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts")
+#    mts_info = get_mts_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts")
 #    propNames = ('Video', 'InternalName', 'ProductName',
 #         'CompanyName', 'LegalCopyright', 'ProductVersion',
 #         'FileDescription', 'LegalTrademarks', 'PrivateBuild',
@@ -130,20 +142,31 @@ if __name__ == '__main__':
 #    props = {'Video': None, 'StringFileInfo': None, 'FileVersion': None}
 #    props['Video'] = mts_info[]
 
+     #check_result = get_mts_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts")
+     #if(check_result != b'1920X1080'):
+         #del file
 
-'''
-import os,filever
 
-myPath="C:\\path\\to\\check"
 
-for root, dirs, files in os.walk(myPath):
-    for file in files:
-        file = file.lower() # Convert .EXE to .exe so next line works
-        if (file.count('.exe') or file.count('.dll')): # Check only exe or dll files
-            fullPathToFile=os.path.join(root,file)
-            major,minor,subminor,revision=filever.get_version_number(fullPathToFile)
-            print "Filename: %s \t Version: %s.%s.%s.%s" % (file,major,minor,subminor,revision)
-'''
+    #myPath="D:/workspace_bi/python/file_filter/test/"
+    myPath = "E:/recover2"
+    print("start at :",myPath)
+    del_count = 0
+    for root, dirs, files in os.walk(myPath):
+        for file in files:
+            file = file.lower() # Convert .EXE to .exe so next line works
+            if (file.count('.mts')): # Check only exe or dll files
+                fullPathToFile=os.path.join(root,file)
+                ret = get_mts_info(fullPathToFile)
+                print(fullPathToFile)
+                if(ret != 1):
+                    #del mts file
+                    del_mts_file(fullPathToFile)
+                    del_count += 1
+                    print(str(del_count))
+
+    print("total del:",str(del_count))
+
 
 '''
 from win32com.client import Dispatch
