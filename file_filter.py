@@ -61,16 +61,34 @@ import moviepy
 from moviepy.editor import VideoFileClip
 
 import subprocess
+import re
+
 
 def getLength(filename):
-  result = subprocess.Popen(["ffprobe", filename],
-    stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
-  #print(FFprobe(filename).Video)
-  return [x for x in result.stdout.readlines()]
+    result = subprocess.Popen(["ffprobe", filename],
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    # print(FFprobe(filename).Video)
+    #return [x for x in result.stdout.readlines()]
+
+    #for x in result.stdout.readlines:
+    #    if(x)
+
+    #for i in iter(result.stdout.readline,'b'):
+    #    print(i)
+
+    #list1 = ['a','b']
+    #return [x for x in list1]
+    #print(re.split(r'[;|,\r\n]+',result.stdout.readlines()))
+    result_list = result.stdout.readlines()
+    for x in result_list:
+        #x.decode('UTF-8')
+        if(x.find(b'Video: h264') > 0 ):
+            return x
 
 def get_vedio_info(path):
     clip = VideoFileClip(path)
-    print( clip.duration ) # second
+    print(clip.duration)  # second
+
 
 '''
 def LOWORD(dword):
@@ -96,19 +114,19 @@ def get_version_number (filename):
 '''
 
 if __name__ == '__main__':
-#  import os
-#  filename = os.environ["COMSPEC"]
-#  print ".".join ([str (i) for i in get_version_number ("./aa.txt")])    
-  # print(get_product_version ("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.txt"))
-   print(getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts"))
-   #print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
-   #print(get_version_number ("./aa.txt"))
+    #  import os
+    #  filename = os.environ["COMSPEC"]
+    #  print ".".join ([str (i) for i in get_version_number ("./aa.txt")])
+    # print(get_product_version ("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.txt"))
+    print(getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts"))
+    # print(get_vedio_info("C:/Users/lmfpe/workspace/tsb/python/file_filter/aa.avi"))
+    #print(get_version_number ("./aa.txt"))
 #    mts_info = getLength("C:/Users/lmfpe/workspace/tsb/python/file_filter/002775.mts")
 #    propNames = ('Video', 'InternalName', 'ProductName',
 #         'CompanyName', 'LegalCopyright', 'ProductVersion',
 #         'FileDescription', 'LegalTrademarks', 'PrivateBuild',
 #         'FileVersion', 'OriginalFilename', 'SpecialBuild')
- 
+
 #    props = {'Video': None, 'StringFileInfo': None, 'FileVersion': None}
 #    props['Video'] = mts_info[]
 
@@ -135,4 +153,4 @@ info = ver_parser.GetFileVersion("F:/recover2/aa.txt")
 
 if info == 'No Version Information Available':
     info = None
-'''    
+'''
